@@ -26,13 +26,26 @@ def main():
 		print(("-"*68))
 
 	def get_app_link(query):
-		html_page = requests.get("https://play.google.com/store/search?q="+query+"&c=apps")
-		soup = BeautifulSoup(html_page.text,'html.parser')
-		applink=soup.find('a',attrs={'class':'poRVub'})
-		return applink['href']
+		# html_page = requests.get("https://play.google.com/store/search?q="+query+"&c=apps")
+		# soup = BeautifulSoup(html_page.text,'html.parser')
+		# applink=soup.find('a',attrs={'class':'poRVub'})
+		# return applink['href']
+			try:
+				html_page = requests.get("https://play.google.com/store/search?q=" + query + "&c=apps")
+				# html_page = requests.get("https://play.google.com/store/apps/details?id=com." + query)
+				soup = BeautifulSoup(html_page.text, 'html.parser')
+				applink = soup.find('a', attrs={'class': 'Si6A0c Gy4nib'}) # Specify class
+				if applink:
+					return "https://play.google.com" + applink.get('href')
+				else:
+					print("Error: App link not found.")
+					return None
+			except Exception as e:
+				print("Error occurred while fetching app link:", str(e))
+				return None
 
 	def get_info(url,soup):
-		info_box = [info_box.text.strip() for info_box in soup.find_all('div', 'hAyfc')]
+		info_box = [info_box.text.strip() for info_box in soup.find_all('div', 'ubGTjb')] # Specify class
 		name=soup.find('meta',attrs={'itemprop':'name'})
 		price=soup.find('meta',attrs={'itemprop':'price'})
 		priceCurrency=soup.find('meta',attrs={'itemprop':'priceCurrency'})
